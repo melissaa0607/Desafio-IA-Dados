@@ -1,9 +1,7 @@
 <?php
-// Inclua o arquivo connection.php primeiro
 include_once 'connection.php';
 include_once 'controller.php';
 
-// Agora você pode chamar as funções definidas em connection.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $dadosJson = file_get_contents("php://input");

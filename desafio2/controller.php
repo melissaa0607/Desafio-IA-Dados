@@ -4,14 +4,12 @@ include 'connection.php';
 function inserirRegistro($dados) {
     global $conn;
 
-    // Acessando os dados recebidos do JSON
     $nome = $dados['nome'];
     $cadastro = date('Y-m-d');
     $ano = $dados['ano'];
     $status = $dados['status'];
     $alteracao = date('Y-m-d');
 
-    // Executar a lógica para inserir o registro no banco de dados
     $sql = "INSERT INTO cadastro (NOME_CARROS, CADASTRO_CARROS, ANO_CARROS, STATUS_CARROS, ALTERACAO_CARROS)
             VALUES ('$nome', '$cadastro', '$ano', '$status', '$alteracao')";
 
@@ -25,34 +23,26 @@ function inserirRegistro($dados) {
 function atualizarRegistro($id, $novosDados) {
     global $conn;
 
-    // Inicializa um array para armazenar os fragmentos de SQL para cada campo a ser atualizado
     $updates = array();
 
-    // Verifica se o status está presente no JSON
     if (isset($novosDados['status'])) {
         $status = $novosDados['status'];
         $updates[] = "STATUS_CARROS='$status'";
     }
 
-    // Verifica se o nome está presente no JSON
     if (isset($novosDados['nome'])) {
         $nome = $novosDados['nome'];
         $updates[] = "NOME_CARROS='$nome'";
     }
 
-    // Verifica se o ano está presente no JSON
     if (isset($novosDados['ano'])) {
         $ano = $novosDados['ano'];
         $updates[] = "ANO_CARROS='$ano'";
     }
 
-    // Sempre atualiza a data de alteração
+    //atualiza a data de alteração
     $updates[] = "ALTERACAO_CARROS=NOW()";
-
-    // Constrói a parte SET da consulta SQL
     $set_clause = implode(",", $updates);
-
-    // Executar a lógica para atualizar o registro no banco de dados
     $sql = "UPDATE cadastro SET $set_clause WHERE ID_CARROS=$id";
 
     if ($conn->query($sql) === TRUE) {
@@ -63,15 +53,12 @@ function atualizarRegistro($id, $novosDados) {
 }
 function buscarRegistros() {
     global $conn;
-
-    // Executar a lógica para buscar registros na tabela e retornar os resultados
     $sql = "SELECT * FROM cadastro";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $rows = array();
         while($row = $result->fetch_assoc()) {
-            // Organize os dados como desejar aqui
             $registro = array(
                 'ID' => $row['ID_CARROS'],
                 'NOME' => $row['NOME_CARROS'],
@@ -91,8 +78,6 @@ function buscarRegistros() {
 
 function excluirRegistro($id) {
     global $conn;
-
-    // Executar a lógica para excluir o registro com base no ID fornecido
     $sql = "DELETE FROM cadastro WHERE ID_CARROS=$id";
 
     if ($conn->query($sql) === TRUE) {
